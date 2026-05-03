@@ -1,0 +1,3 @@
+Compile command: g++ -Wall -c "%f" "Embedded_RPi_Demo.cpp" "Event_Queue_Controller.cpp" "Exit_Condition.cpp" "i2c_demo.cpp" -l wiringPi
+Build command: g++ -Wall -o "%e" "%f" "Embedded_RPi_Demo.cpp" "Event_Queue_Controller.cpp" "Exit_Condition.cpp" "i2c_demo.cpp" -l wiringPi
+Lint command: cppcheck --language=c++ --enable=warning,style --template=gcc "%f" "Embedded_RPi_Demo.cpp" "Event_Queue_Controller.cpp" "Exit_Condition.cpp" "i2c_demo.cpp"

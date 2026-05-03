@@ -4,6 +4,7 @@
 
 #include "Event_Queue_Controller.h"
 #include "Exit_Condition.h"
+#include "i2c_demo.h"
 #include <iostream>
 #include <wiringPi.h>
 #include <thread>
@@ -20,5 +21,6 @@ void get_user_input();
 void periodic_event();
 string to_lower(string input_str);
 void button_handler();
+void i2c_potentiometer_handler();
 
 #endif

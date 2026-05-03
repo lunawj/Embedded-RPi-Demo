@@ -9,10 +9,11 @@ void run()
    wiringPiSetupGpio();
    pinMode(BUTTON_PIN, INPUT);
    
-   
    std::thread periodic_event_thread(periodic_event); 
    std::thread get_user_input_thread(get_user_input); 
    std::thread button_handler_thread(button_handler); 
+   std::thread i2c_potentiometer_handler_thread(i2c_potentiometer_handler); 
+   
    string tempNode = "";
    while(!exitCondition.is_exit_condition_met())
    {
@@ -36,8 +37,8 @@ void run()
    periodic_event_thread.join();
    get_user_input_thread.join();
    button_handler_thread.join();
+   i2c_potentiometer_handler_thread.join(); 
 }
-
 
 void get_user_input()
 {
@@ -53,7 +54,7 @@ void get_user_input()
 
 void periodic_event()
 {
-   int seconds_between_events = 5;
+   int seconds_between_events = 1;
    int events_sent = 0;
    while (!exitCondition.is_exit_condition_met())
    {
@@ -95,5 +96,24 @@ void button_handler()
       }
       
       this_thread::sleep_for(chrono::seconds(debounce_time));
+   }
+}
+
+void i2c_potentiometer_handler()
+{
+   int seconds_between_events = 1;
+   if(!setup_i2c_adc())
+   {
+      cout << "I2C ADC setup unsuccessful. Exiting... " << endl;
+      return;
+   } 
+   
+   wiringPiNodeStruct *pcf8591_node = wiringPiNodes;
+   int read_value;
+   while(!exitCondition.is_exit_condition_met())
+   {
+      read_value = pcf8591_node->analogRead(pcf8591_node, AN1);
+      inboundEventQueue.push("Potentiometer ADC Value: " + to_string(read_value));
+      this_thread::sleep_for(chrono::seconds(seconds_between_events));
    }
 }
